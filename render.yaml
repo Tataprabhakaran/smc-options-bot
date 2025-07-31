@@ -1,7 +1,7 @@
 services:
   - type: cron
     name: smc-options-signal
-    schedule: "*/5 * * * *"
+    schedule: "*/15 * * * *"
     runtime: python
     buildCommand: ""
     startCommand: "python main.py"
