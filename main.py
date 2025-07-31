@@ -1,29 +1,42 @@
-from telegram.ext import Updater, CommandHandler
-from PIL import Image
-import os
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, CallbackContext
+import logging
 
-# === Replace with your bot token ===
-TELEGRAM_TOKEN = "YOUR_BOT_TOKEN"
+# Enable logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-def start(update, context):
+# Define the start command handler
+def start(update: Update, context: CallbackContext) -> None:
     update.message.reply_text("Hello! I'm your SMC bot. Ready to send alerts!")
 
-# Example of how to check image type using Pillow
-def check_image_type(file_path):
-    try:
-        with Image.open(file_path) as img:
-            return img.format  # e.g., 'JPEG', 'PNG'
-    except Exception as e:
-        return f"Error: {e}"
+# Error handler
+def error(update: Update, context: CallbackContext) -> None:
+    logger.warning(f"Update {update} caused error {context.error}")
 
 def main():
-    updater = Updater(TELEGRAM_TOKEN, use_context=True)
-    dp = updater.dispatcher
+    """Start the bot."""
+    # Get your bot token from BotFather
+    TELEGRAM_TOKEN = "YOUR_BOT_TOKEN"  # Replace with your bot's token
 
-    dp.add_handler(CommandHandler("start", start))
+    # Create Updater and pass it your bot's token.
+    updater = Updater(TELEGRAM_TOKEN)
 
+    # Get the dispatcher to register handlers
+    dispatcher = updater.dispatcher
+
+    # Register command handler for /start
+    dispatcher.add_handler(CommandHandler("start", start))
+
+    # Log all errors
+    dispatcher.add_error_handler(error)
+
+    # Start polling for updates
     updater.start_polling()
+
+    # Block until you send a signal to stop
     updater.idle()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
