@@ -1,11 +1,22 @@
-from smc_engine import check_smc_signal
-from telegram_bot import send_telegram_alert
+from telegram.ext import Updater, CommandHandler
 import os
 
-def handler():
-    signal = check_smc_signal("NIFTY", interval="5m")
-    if signal:
-        send_telegram_alert(signal)
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-if __name__ == "__main__":
-    handler()
+if not BOT_TOKEN:
+    raise ValueError("BOT_TOKEN not found. Set it in Render Environment Variables.")
+
+def start(update, context):
+    update.message.reply_text("SMC Bot is running!")
+
+def main():
+    updater = Updater(BOT_TOKEN, use_context=True)
+    dp = updater.dispatcher
+    dp.add_handler(CommandHandler("start", start))
+
+    print("Bot started... polling.")
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
