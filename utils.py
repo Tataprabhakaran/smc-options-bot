@@ -1,7 +1,7 @@
 import requests
 import numpy as np
 
-def get_candles(symbol, interval="5m"):
+def get_candles(symbol, interval="15m"):
     # Mocking data for now (replace with live API like TradingView or broker)
     return [
         {"open": 22000+i, "high": 22050+i, "low": 21950+i, "close": 22010+i}
