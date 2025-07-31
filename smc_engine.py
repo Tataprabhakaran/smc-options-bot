@@ -1,7 +1,7 @@
 import requests
 from utils import get_candles, get_rsi, get_atm_strike
 
-def check_smc_signal(symbol, interval="5m"):
+def check_smc_signal(symbol, interval="15m"):
     candles = get_candles(symbol, interval)
     if len(candles) < 20:
         return None
